@@ -40,9 +40,9 @@ class PokemonAdapter(val context: Context, val pokemons: List<Pokemon>):Recycler
 
         override fun onClick(v: View) {
             var container: LinearLayout = v as LinearLayout
-            var intent:Intent = Intent(v.context, PokemonActivity::class.java)
-            intent.putExtra("URL",(container.getChildAt(1) as TextView).hint.toString())
-            v.context.startActivity(intent)
+            var mIntent = Intent(v.context, PokemonActivity::class.java)
+            mIntent.putExtra("URL",(container.getChildAt(1) as TextView).hint.toString())
+            v.context.startActivity(mIntent)
         }
 
         val pokemonName = v.nombreTextView

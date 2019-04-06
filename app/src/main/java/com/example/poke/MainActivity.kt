@@ -3,13 +3,11 @@ package com.example.poke
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
 import com.example.poke.Models.Pokemon
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONObject
 import java.net.URL
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.longToast
 import org.jetbrains.anko.uiThread
 
 
