@@ -2,6 +2,7 @@ package com.example.poke
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import com.example.poke.Models.Pokemon
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,50 +17,42 @@ class MainActivity : AppCompatActivity() {
 
     private val mPokemonList = mutableListOf<Pokemon>()
 
-    lateinit var viewManager: LinearLayoutManager
-    lateinit var viewAdpater: PokemonAdapter
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initRecyclerView()
-
+        setupRecyclerView()
         getPokemonList()
-
     }
-
-    fun initRecyclerView() {
-
-        viewManager = LinearLayoutManager(this)
-
-        viewAdpater = PokemonAdapter(mPokemonList, "QUE DIABLOS VA ACA AUXILIO")
-
-        recyclerview.apply {
-            layoutManager = viewManager
-            adapter = viewAdpater
-        }
-    }
-
 
     private fun getPokemonList() {
         doAsync {
             var result = URL("https://pokeapi.co/api/v2/pokemon/").readText()
-            var json = JSONObject(result)
-            var pokemon = json.getJSONArray("results")
-
+            var resultJson = JSONObject(result)
+            var pokemons = resultJson.getJSONArray("results")
             mPokemonList.clear()
-            for (i in 0..(pokemon.length() - 1)) {
-                var item = pokemon.getJSONObject(i)
-
-                mPokemonList.add(Pokemon(item["name"].toString(), item["url"].toString()))
+            for (i in 0..(pokemons.length() - 1)){
+                var item = pokemons.getJSONObject(i)
+                var url:String = item["url"].toString()
+                var splits = url.split("/")
+                var id_number = splits[splits.size-2]
+                var image_url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$id_number.png"
+                mPokemonList.add(Pokemon(item["name"].toString(), item["url"].toString(), id_number , image_url))
             }
-            uiThread {
-                longToast("Request performed")
-                recyclerview.adapter?.notifyDataSetChanged()
+
+            uiThread{
+                recyclerView.adapter?.notifyDataSetChanged()
             }
         }
 
     }
 
+    private fun setupRecyclerView() {
+        recyclerView.layoutManager = GridLayoutManager(this, 2)
+        recyclerView.adapter = PokemonAdapter(this, mPokemonList)
+    }
+
+
+
 
 }
+
